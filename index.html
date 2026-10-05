@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Cartão do Casal</title>
+<meta name="theme-color" content="#0f6e6a">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-180.png">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: app de uma coluna (máx. 520px), barra de abas fixa embaixo, botão + flutuante, folha deslizante para lançar */
+:root{
+  --bg:#f3f5f7; --surface:#ffffff; --surface-2:#e9edf1; --line:#d7dde4;
+  --fg:#16202b; --muted:#5d6b7a;
+  --accent:#0f6e6a; --accent-fg:#ffffff; --accent-soft:#d6ecea;
+  --eu:#2f5fd0; --ela:#c8416b; --casal:#8a6a12;
+  --eu-soft:#e0e8fb; --ela-soft:#f8e1e8; --casal-soft:#f3ead2;
+  --ok:#2e7d4f; --warn:#b7791f; --bad:#c0392b;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Figtree", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e1419; --surface:#172029; --surface-2:#1f2a35; --line:#2b3845;
+  --fg:#e7edf2; --muted:#93a3b3;
+  --accent:#3fb3aa; --accent-fg:#06201e; --accent-soft:#16332f;
+  --eu:#7ea2ff; --ela:#f07fa2; --casal:#e0b54c;
+  --eu-soft:#1c2a4a; --ela-soft:#3a1d29; --casal-soft:#342a12;
+  --ok:#5cc58a; --warn:#e3a94a; --bad:#ef6b5d; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1419; --surface:#172029; --surface-2:#1f2a35; --line:#2b3845;
+  --fg:#e7edf2; --muted:#93a3b3;
+  --accent:#3fb3aa; --accent-fg:#06201e; --accent-soft:#16332f;
+  --eu:#7ea2ff; --ela:#f07fa2; --casal:#e0b54c;
+  --eu-soft:#1c2a4a; --ela-soft:#3a1d29; --casal-soft:#342a12;
+  --ok:#5cc58a; --warn:#e3a94a; --bad:#ef6b5d; color-scheme:dark}
+
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.45;padding:0 16px;padding-block:12px calc(96px + env(safe-area-inset-bottom,0px))}
+.wrap{max-width:520px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.wrap>*{min-width:0}
+.split{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance}
+h2{font-size:17px;font-weight:600}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.label{font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.brand{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:-.01em}
+.status{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.dot.on{background:var(--ok)}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+
+/* Cabeçalho da fatura */
+.monthnav{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.iconbtn{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;font-size:18px}
+.bill{background:var(--accent);color:var(--accent-fg);border-color:transparent}
+.bill .label{color:inherit;opacity:.8}
+.bill-total{font-family:var(--display);font-weight:800;font-size:40px;line-height:1;letter-spacing:-.02em}
+.bill-meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;opacity:.9}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:600;background:color-mix(in srgb,var(--accent-fg) 18%,transparent)}
+
+/* Divisão */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.who{border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.who.eu{background:var(--eu-soft)} .who.ela{background:var(--ela-soft)}
+.who .name{font-weight:700;font-size:14px}
+.who.eu .name{color:var(--eu)} .who.ela .name{color:var(--ela)}
+.who .val{font-family:var(--display);font-weight:800;font-size:24px}
+.who .det{font-size:12px;color:var(--muted)}
+.stack{display:flex;height:10px;border-radius:6px;overflow:hidden;background:var(--surface-2)}
+.stack span{display:block;height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--muted)}
+.legend b{color:var(--fg);font-weight:600}
+.sw{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px;vertical-align:middle}
+
+/* Categorias */
+.cats{display:flex;flex-direction:column;gap:11px}
+.cat-row{display:flex;flex-direction:column;gap:5px}
+.cat-top{display:flex;justify-content:space-between;gap:8px;font-size:14px}
+.cat-top span:first-child{font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar{height:7px;border-radius:5px;background:var(--surface-2);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:5px}
+.bar i.warn{background:var(--warn)} .bar i.bad{background:var(--bad)}
+.over{color:var(--bad);font-weight:600}
+
+/* Lista de lançamentos */
+.filters{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.pill{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:5px 12px;font-size:13px;white-space:nowrap}
+.pill[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.list{display:flex;flex-direction:column}
+.item{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line);background:none;border-left:0;border-right:0;border-bottom:0;text-align:left;width:100%}
+.item:first-child{border-top:0}
+.tag{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:11px;font-weight:700}
+.tag.eu{background:var(--eu-soft);color:var(--eu)} .tag.ela{background:var(--ela-soft);color:var(--ela)} .tag.casal{background:var(--casal-soft);color:var(--casal)}
+.item .desc{font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item .sub{font-size:12px;color:var(--muted)}
+.item .amt{font-weight:700;text-align:right}
+.item .amt small{display:block;font-weight:500;font-size:11.5px;color:var(--muted)}
+.empty{padding:18px 4px;text-align:center;color:var(--muted);font-size:14px}
+
+/* Futuro */
+.chart{display:flex;align-items:flex-end;gap:6px;height:150px;padding-top:18px}
+.col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;min-width:0}
+.col .stk{width:100%;display:flex;flex-direction:column-reverse;border-radius:6px 6px 2px 2px;overflow:hidden;min-height:2px}
+.col .v{font-size:10.5px;color:var(--muted);white-space:nowrap}
+.col .m{font-size:11.5px;font-weight:600}
+.col.cur .m{color:var(--accent)}
+.limit{display:flex;flex-direction:column;gap:6px}
+.limit .big{font-family:var(--display);font-weight:800;font-size:26px}
+
+/* Formulários */
+.field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.field label{font-size:13px;font-weight:600;color:var(--muted)}
+input,select,textarea{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0}
+textarea{min-height:130px;font-size:13px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.seg button{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 4px;font-weight:600;font-size:14px}
+.seg button[aria-pressed="true"].eu{background:var(--eu);border-color:var(--eu);color:#fff}
+.seg button[aria-pressed="true"].ela{background:var(--ela);border-color:var(--ela);color:#fff}
+.seg button[aria-pressed="true"].casal{background:var(--casal);border-color:var(--casal);color:var(--bg)}
+.btn{border:0;border-radius:12px;padding:12px 16px;font-weight:700;background:var(--accent);color:var(--accent-fg)}
+.btn.ghost{background:var(--surface-2);color:var(--fg)}
+.btn.danger{background:transparent;color:var(--bad);border:1px solid var(--bad)}
+.btn.danger.armed{background:var(--bad);color:#fff}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btns .btn{flex:1}
+.hint{font-size:12.5px;color:var(--muted)}
+
+/* Importação */
+.imp-table{overflow-x:auto}
+.imp-row{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:start;padding:9px 0;border-top:1px solid var(--line)}
+.imp-row .ctrls{grid-column:2 / 4;display:grid;grid-template-columns:1fr;gap:6px}
+.imp-row .seg button{padding:7px 4px;font-size:13px}
+.imp-row.todo .seg button{border-color:var(--warn)}
+.imp-row.off{opacity:.5}
+.imp-row select{padding:6px 8px;font-size:13px}
+.imp-row input[type=checkbox]{width:20px;height:20px;margin-top:2px}
+
+/* Ajustes */
+.cat-edit{display:grid;grid-template-columns:1fr 92px 96px 36px;gap:6px;align-items:center}
+.cat-edit input,.cat-edit select{padding:8px;font-size:13.5px}
+.xbtn{width:36px;height:36px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--muted)}
+
+/* Barra de abas + FAB */
+.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);z-index:10}
+.tabs nav{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.tabs button{background:none;border:0;padding:10px 4px 12px;font-size:12px;font-weight:600;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px}
+.tabs button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8}
+.tabs button[aria-current="page"]{color:var(--accent)}
+.fab{position:fixed;right:max(16px,calc(50% - 244px));bottom:calc(76px + env(safe-area-inset-bottom,0px));width:58px;height:58px;border-radius:18px;border:0;background:var(--accent);color:var(--accent-fg);font-size:30px;line-height:1;box-shadow:0 6px 18px color-mix(in srgb,var(--accent) 40%,transparent);z-index:11}
+
+/* Folha */
+.scrim{position:fixed;inset:0;background:rgba(10,15,20,.45);z-index:20}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:21;background:var(--bg);border-radius:20px 20px 0 0;max-height:92%;overflow-y:auto;padding:10px 16px;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}
+.sheet .inner{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.grab{width:40px;height:4px;border-radius:4px;background:var(--line);margin:4px auto 6px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(150px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:9px 16px;border-radius:10px;font-size:14px;font-weight:600;z-index:30;max-width:calc(100% - 32px)}
+.banner{background:var(--casal-soft);color:var(--fg);border-radius:12px;padding:10px 12px;font-size:13px}
+@media (prefers-reduced-motion:no-preference){.sheet{animation:up .22s ease-out}@keyframes up{from{transform:translateY(40px);opacity:.6}}}
+.login{min-height:85vh;display:grid;place-items:center;padding-block:10vh}
+.login-card{max-width:360px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px}
+.login-card h1{font-size:30px;font-weight:800;letter-spacing:-.02em}
+.login-card .btn{width:100%;padding:14px}
+#who{max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+body{-webkit-tap-highlight-color:transparent;overscroll-behavior-y:contain}
+</style>
+
+<div class="login" id="login">
+  <div class="login-card">
+    <svg viewBox="0 0 64 64" width="72" height="72" aria-hidden="true"><rect x="4" y="14" width="56" height="38" rx="8" fill="var(--accent)"/><rect x="4" y="22" width="56" height="7" fill="var(--accent-fg)" opacity=".35"/><circle cx="40" cy="42" r="6" fill="var(--eu)"/><circle cx="48" cy="42" r="6" fill="var(--ela)" opacity=".9"/></svg>
+    <h1>Cartão do Casal</h1>
+    <p class="muted" style="margin:0">Entre com a conta Google cadastrada para ver e lançar os gastos do cartão.</p>
+    <button class="btn" id="loginBtn" type="button">Entrar com Google</button>
+    <p class="hint" id="loginMsg" style="margin:0;min-height:1.2em"></p>
+  </div>
+</div>
+<div id="app" hidden>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">Cartão do Casal</div>
+    <div class="status"><span class="dot" id="dot"></span><span id="statusTxt">Conectando…</span><span class="muted">·</span><span id="who"></span></div>
+  </header>
+
+  <!-- FATURA -->
+  <section id="v-fatura" class="wrap" style="gap:14px">
+    <div class="card bill">
+      <div class="monthnav">
+        <button class="iconbtn" id="prevM" aria-label="Fatura anterior" style="background:transparent;border-color:color-mix(in srgb,var(--accent-fg) 35%,transparent);color:inherit">‹</button>
+        <div style="text-align:center">
+          <div class="label" id="billLabel">Fatura</div>
+          <div style="font-weight:700" id="billMonth">—</div>
+        </div>
+        <button class="iconbtn" id="nextM" aria-label="Próxima fatura" style="background:transparent;border-color:color-mix(in srgb,var(--accent-fg) 35%,transparent);color:inherit">›</button>
+      </div>
+      <div class="bill-total num" id="billTotal">R$ 0,00</div>
+      <div class="bill-meta" id="billMeta"></div>
+    </div>
+
+    <div class="card">
+      <h2>Quanto cabe a cada um</h2>
+      <div class="split" id="split"></div>
+      <div class="stack" id="stack"></div>
+      <div class="legend" id="legend"></div>
+    </div>
+
+    <div class="card">
+      <h2>Categorias</h2>
+      <div class="cats" id="cats"></div>
+    </div>
+
+    <div class="card">
+      <div class="top"><h2>Lançamentos</h2><span class="muted num" id="countTxt"></span></div>
+      <div class="filters" id="filters"></div>
+      <div class="list" id="list"></div>
+    </div>
+  </section>
+
+  <!-- FUTURO -->
+  <section id="v-futuro" class="wrap" style="gap:14px" hidden>
+    <div class="card">
+      <h2>Próximas faturas</h2>
+      <p class="hint" style="margin:0">Parcelas já lançadas que ainda vão cair. Compras novas somam em cima disso.</p>
+      <div class="chart" id="chart"></div>
+      <div class="legend" id="chartLegend"></div>
+    </div>
+    <div class="card limit" id="limitCard"></div>
+    <div class="card">
+      <h2>Parcelamentos em andamento</h2>
+      <div class="list" id="parcList"></div>
+    </div>
+  </section>
+
+  <!-- IMPORTAR -->
+  <section id="v-importar" class="wrap" style="gap:14px" hidden>
+    <div class="card">
+      <h2>Importar fatura do banco</h2>
+      <p class="hint" style="margin:0">Escolha o PDF ou CSV/OFX da fatura, ou cole o texto. Parcelas no formato "03/10" são reconhecidas.</p>
+      <div class="field"><label for="impFatura">Esta é a fatura de</label><select id="impFatura"></select></div>
+      <div class="field"><label for="impFile">Arquivo da fatura (.pdf, .csv, .ofx)</label><input type="file" id="impFile"><span class="hint" id="impStatus"></span></div>
+      <div class="field" id="pwField" hidden><label for="impPw">Senha do PDF</label><input id="impPw" type="password" autocomplete="off" placeholder="Muitos bancos usam os primeiros dígitos do CPF"><button class="btn ghost" id="impPwGo" type="button">Abrir PDF</button></div>
+      <div class="field"><label for="impText">Ou cole o texto da fatura</label><textarea id="impText" placeholder="12/09  SUPERMERCADO BISTEK      312,45&#10;13/09  POSTO IPIRANGA LAGES     250,00&#10;14/09  MAGAZINE LOJA  03/10      89,90"></textarea></div>
+      <button class="btn" id="impRead">Ler lançamentos</button>
+    </div>
+    <div class="card" id="impPreviewCard" hidden>
+      <div class="top"><h2>Conferir antes de salvar</h2><span class="muted num" id="impCount"></span></div>
+      <p class="hint" style="margin:0">Toque em de quem é cada gasto. Itens já lançados vêm desmarcados.</p>
+      <div class="legend num" id="impSum"></div>
+      <div class="btns"><button class="btn ghost" id="impRestCasal" type="button">Restantes como Casal</button></div>
+      <div class="imp-table" id="impList"></div>
+      <button class="btn" id="impSave">Importar selecionados</button>
+    </div>
+  </section>
+
+  <!-- AJUSTES -->
+  <section id="v-ajustes" class="wrap" style="gap:14px" hidden>
+    <div class="card">
+      <h2>Vocês</h2>
+      <div class="row2">
+        <div class="field"><label for="nmEu">Nome dele</label><input id="nmEu" maxlength="16"></div>
+        <div class="field"><label for="nmEla">Nome dela</label><input id="nmEla" maxlength="16"></div>
+      </div>
+      <div class="field"><label for="cfSplit">Gastos do casal: parte dele (%)</label><input id="cfSplit" type="number" min="0" max="100" step="1" inputmode="numeric"><span class="hint">50 = meio a meio.</span></div>
+    </div>
+    <div class="card">
+      <h2>Cartão</h2>
+      <div class="row2">
+        <div class="field"><label for="cfFech">Dia do fechamento</label><input id="cfFech" type="number" min="1" max="28" inputmode="numeric"></div>
+        <div class="field"><label for="cfVenc">Dia do vencimento</label><input id="cfVenc" type="number" min="1" max="28" inputmode="numeric"></div>
+      </div>
+      <div class="field"><label for="cfLim">Limite total (R$)</label><input id="cfLim" inputmode="decimal" placeholder="0,00"></div>
+      <span class="hint">Compra feita no dia do fechamento ou depois entra na fatura seguinte.</span>
+    </div>
+    <div class="card">
+      <h2>Categorias</h2>
+      <span class="hint">Limite mensal (0 = sem limite) e para quem a categoria já vem marcada.</span>
+      <div class="cat-edit label" style="font-size:10.5px"><span>Nome</span><span>Limite</span><span>Padrão</span><span></span></div>
+      <div id="catEdit" style="display:flex;flex-direction:column;gap:6px"></div>
+      <button class="btn ghost" id="catAdd">+ Categoria</button>
+    </div>
+    <button class="btn" id="cfSave">Salvar ajustes</button>
+    <div class="card">
+      <h2>Backup</h2>
+      <span class="hint">Guarde uma cópia dos lançamentos ou restaure de um arquivo backup.json.</span>
+      <div class="btns"><button class="btn ghost" id="bkSave" type="button">Baixar backup</button></div>
+      <div class="field"><label for="bkFile">Restaurar backup</label><input type="file" id="bkFile" accept=".json,application/json"></div>
+    </div>
+    <button class="btn danger" id="logout" type="button">Sair da conta</button>
+  </section>
+</div>
+
+<div class="tabs"><nav id="tabs">
+  <button data-v="fatura" aria-current="page"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 10h18M7 15h4"/></svg>Fatura</button>
+  <button data-v="futuro"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Futuro</button>
+  <button data-v="importar"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>Importar</button>
+  <button data-v="ajustes"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg>Ajustes</button>
+</nav></div>
+<button class="fab" id="fab" aria-label="Novo lançamento">+</button>
+
+<div class="scrim" id="scrim" hidden></div>
+<div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="shTitle">
+  <div class="inner">
+    <div class="grab"></div>
+    <h2 id="shTitle">Novo lançamento</h2>
+    <div class="field" id="smsField"><label for="fSms">Mensagem do banco</label><textarea id="fSms" rows="2" style="min-height:64px" placeholder="Toque e segure aqui, depois Colar. Ex.: Compra aprovada de R$ 45,90 em PADARIA CENTRAL"></textarea><span class="hint" id="smsInfo">Opcional. Preenche valor, loja, data e parcelas.</span></div>
+    <div class="field"><label for="fDesc">Descrição</label><input id="fDesc" maxlength="60" placeholder="Ex.: Mercado Bistek"></div>
+    <div class="row2">
+      <div class="field"><label for="fVal" id="fValLbl">Valor total (R$)</label><input id="fVal" inputmode="decimal" placeholder="0,00"></div>
+      <div class="field"><label for="fParc">Parcelas</label><select id="fParc"></select></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label for="fData">Data da compra</label><input id="fData" type="date"></div>
+      <div class="field"><label for="fCat">Categoria</label><select id="fCat"></select></div>
+    </div>
+    <div class="field"><label>De quem é o gasto</label><div class="seg" id="fQuem"></div></div>
+    <div class="hint" id="fInfo"></div>
+    <div class="btns"><button class="btn ghost" id="fCancel">Cancelar</button><button class="btn" id="fSave">Salvar</button></div>
+    <button class="btn danger" id="fDel" hidden>Excluir lançamento</button>
+  </div>
+</div>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+
+<script src="config.js?v=b92c47f1"></script>
+<script type="module" src="app.js?v=b92c47f1"></script>
+</body></html>
