@@ -1,4 +1,4 @@
-const VER="b92c47f1";
+const VER="91609f61";
 const SHELL=["./","./index.html","./app.js?v="+VER,"./config.js?v="+VER,"./pdf.worker.min.js","./manifest.webmanifest","./icon-192.png","./icon-512.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open("shell-"+VER).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()))});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k.startsWith("shell-")&&k!=="shell-"+VER).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});

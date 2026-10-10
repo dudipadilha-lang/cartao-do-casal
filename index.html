@@ -77,7 +77,7 @@ button{cursor:pointer}
 .who.eu{background:var(--eu-soft)} .who.ela{background:var(--ela-soft)}
 .who .name{font-weight:700;font-size:14px}
 .who.eu .name{color:var(--eu)} .who.ela .name{color:var(--ela)}
-.who .val{font-family:var(--display);font-weight:800;font-size:24px}
+.who .val{font-family:var(--display);font-weight:800;font-size:clamp(17px,5.4vw,24px);white-space:nowrap}
 .who .det{font-size:12px;color:var(--muted)}
 .stack{display:flex;height:10px;border-radius:6px;overflow:hidden;background:var(--surface-2)}
 .stack span{display:block;height:100%}
@@ -211,10 +211,16 @@ body{-webkit-tap-highlight-color:transparent;overscroll-behavior-y:contain}
     </div>
 
     <div class="card">
-      <h2>Quanto cabe a cada um</h2>
+      <h2 id="splitTitle">Quanto cabe a cada um</h2>
       <div class="split" id="split"></div>
       <div class="stack" id="stack"></div>
       <div class="legend" id="legend"></div>
+    </div>
+
+    <div class="card">
+      <div class="top"><h2>Gastos fixos do mês</h2><span class="muted num" id="fxTotal"></span></div>
+      <div class="list" id="fxList"></div>
+      <button class="btn ghost" id="fxAdd" type="button">+ Gasto fixo</button>
     </div>
 
     <div class="card">
@@ -238,6 +244,12 @@ body{-webkit-tap-highlight-color:transparent;overscroll-behavior-y:contain}
       <div class="legend" id="chartLegend"></div>
     </div>
     <div class="card limit" id="limitCard"></div>
+    <div class="card">
+      <h2>Gastos fixos</h2>
+      <p class="hint" style="margin:0">Aluguel, financiamentos e contas que se repetem todo mês.</p>
+      <div class="list" id="fxFut"></div>
+      <button class="btn ghost" id="fxAdd2" type="button">+ Gasto fixo</button>
+    </div>
     <div class="card">
       <h2>Parcelamentos em andamento</h2>
       <div class="list" id="parcList"></div>
@@ -332,9 +344,31 @@ body{-webkit-tap-highlight-color:transparent;overscroll-behavior-y:contain}
   </div>
 </div>
 </div>
+<div class="sheet" id="sheetFx" hidden role="dialog" aria-modal="true" aria-labelledby="fxTitle">
+  <div class="inner">
+    <div class="grab"></div>
+    <h2 id="fxTitle">Novo gasto fixo</h2>
+    <div class="field"><label for="fxDesc">Nome</label><input id="fxDesc" maxlength="60" placeholder="Ex.: Aluguel, Financiamento do carro"></div>
+    <div class="row2">
+      <div class="field"><label for="fxVal">Valor por mês (R$)</label><input id="fxVal" inputmode="decimal" placeholder="0,00"></div>
+      <div class="field"><label for="fxCat">Categoria</label><select id="fxCat"></select></div>
+    </div>
+    <div class="field"><label>De quem é</label><div class="seg" id="fxQuem"></div></div>
+    <div class="field"><label>Como é pago</label><div class="seg" id="fxPag" style="grid-template-columns:1fr 1fr"></div></div>
+    <div class="row2">
+      <div class="field"><label for="fxIni">Começa em</label><select id="fxIni"></select></div>
+      <div class="field"><label for="fxDur">Prazo</label><select id="fxDur"><option value="sem">Sem prazo</option><option value="n">Por alguns meses</option></select></div>
+    </div>
+    <div class="field" id="fxNWrap" hidden><label for="fxN">Quantos meses (contando o primeiro)</label><input id="fxN" type="number" min="1" max="600" inputmode="numeric" placeholder="Ex.: 36"></div>
+    <div class="hint" id="fxInfo"></div>
+    <div class="btns"><button class="btn ghost" id="fxCancel" type="button">Cancelar</button><button class="btn" id="fxSave" type="button">Salvar</button></div>
+    <button class="btn danger" id="fxEnd" type="button" hidden>Encerrar</button>
+    <button class="btn danger" id="fxDel" type="button" hidden>Excluir de todos os meses</button>
+  </div>
+</div>
 <div class="toast" id="toast" hidden></div>
 
 
-<script src="config.js?v=b92c47f1"></script>
-<script type="module" src="app.js?v=b92c47f1"></script>
+<script src="config.js?v=91609f61"></script>
+<script type="module" src="app.js?v=91609f61"></script>
 </body></html>
