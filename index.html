@@ -177,6 +177,19 @@ textarea{min-height:130px;font-size:13px;resize:vertical}
 #who{max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 body{-webkit-tap-highlight-color:transparent;overscroll-behavior-y:contain}
+.seg.seg2{grid-template-columns:1fr 1fr}
+.ac-result{font-family:var(--display);font-weight:800;font-size:21px;padding:12px 14px;border-radius:12px;text-wrap:balance}
+.ac-result.pend{background:var(--casal-soft);color:var(--fg)}
+.ac-result.ok{background:var(--accent-soft);color:var(--accent)}
+.ac-pay{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:end}
+.ac-pay .btn{padding:11px 12px;font-size:14px}
+.ac-fora{display:flex;flex-direction:column;gap:2px}
+.ac-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+.ac-row .desc{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ac-row .sub{font-size:12px;color:var(--muted)}
+.ac-row .seg{min-width:150px}.ac-row .seg button{padding:6px 4px;font-size:13px}
+.ac-row.todo .seg button{border-color:var(--warn)}
+.ac-fora .ac-row{grid-template-columns:minmax(0,1fr) auto}
 </style>
 
 <div class="login" id="login">
@@ -215,6 +228,20 @@ body{-webkit-tap-highlight-color:transparent;overscroll-behavior-y:contain}
       <div class="split" id="split"></div>
       <div class="stack" id="stack"></div>
       <div class="legend" id="legend"></div>
+    </div>
+
+    <div class="card">
+      <h2>Acerto do mês</h2>
+      <div class="split" id="acPagou"></div>
+      <div class="ac-result" id="acResult"></div>
+      <div class="ac-pay" id="acPay" hidden>
+        <div class="field"><label for="acVal">Valor do Pix (R$)</label><input id="acVal" inputmode="decimal"></div>
+        <button class="btn" id="acBtn" type="button">Registrar Pix</button>
+      </div>
+      <div id="acList" class="list"></div>
+      <div id="acFora" class="ac-fora"></div>
+      <span class="hint" id="acFatura"></span>
+      <span class="hint" id="acAcum"></span>
     </div>
 
     <div class="card">
@@ -295,6 +322,10 @@ body{-webkit-tap-highlight-color:transparent;overscroll-behavior-y:contain}
       </div>
       <div class="field"><label for="cfLim">Limite total (R$)</label><input id="cfLim" inputmode="decimal" placeholder="0,00"></div>
       <span class="hint">Compra feita no dia do fechamento ou depois entra na fatura seguinte.</span>
+      <div class="row2">
+        <div class="field"><label for="cfPaga">Quem paga a fatura</label><select id="cfPaga"></select></div>
+        <div class="field"><label for="cfDesde">Acertos a partir de</label><select id="cfDesde"></select></div>
+      </div>
     </div>
     <div class="card">
       <h2>Categorias</h2>
@@ -338,6 +369,7 @@ body{-webkit-tap-highlight-color:transparent;overscroll-behavior-y:contain}
       <div class="field"><label for="fCat">Categoria</label><select id="fCat"></select></div>
     </div>
     <div class="field"><label>De quem é o gasto</label><div class="seg" id="fQuem"></div></div>
+    <div class="field"><label>Pago com</label><div class="seg" id="fPag"></div><span class="hint">Use Dudi ou Bruna quando alguém pagou à parte (Pix, dinheiro, outro cartão).</span></div>
     <div class="hint" id="fInfo"></div>
     <div class="btns"><button class="btn ghost" id="fCancel">Cancelar</button><button class="btn" id="fSave">Salvar</button></div>
     <button class="btn danger" id="fDel" hidden>Excluir lançamento</button>
@@ -355,6 +387,7 @@ body{-webkit-tap-highlight-color:transparent;overscroll-behavior-y:contain}
     </div>
     <div class="field"><label>De quem é</label><div class="seg" id="fxQuem"></div></div>
     <div class="field"><label>Como é pago</label><div class="seg" id="fxPag" style="grid-template-columns:1fr 1fr"></div></div>
+    <div class="field" id="fxPgWrap"><label>Quem costuma pagar</label><div class="seg seg2" id="fxPg"></div><span class="hint">Se num mês o outro pagar, troque no Acerto do mês.</span></div>
     <div class="row2">
       <div class="field"><label for="fxIni">Começa em</label><select id="fxIni"></select></div>
       <div class="field"><label for="fxDur">Prazo</label><select id="fxDur"><option value="sem">Sem prazo</option><option value="n">Por alguns meses</option></select></div>
@@ -369,6 +402,6 @@ body{-webkit-tap-highlight-color:transparent;overscroll-behavior-y:contain}
 <div class="toast" id="toast" hidden></div>
 
 
-<script src="config.js?v=91609f61"></script>
-<script type="module" src="app.js?v=91609f61"></script>
+<script src="config.js?v=246c6089"></script>
+<script type="module" src="app.js?v=246c6089"></script>
 </body></html>
