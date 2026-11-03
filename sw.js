@@ -1,5 +1,5 @@
-const VER="246c6089";
-const SHELL=["./","./index.html","./app.js?v="+VER,"./config.js?v="+VER,"./pdf.worker.min.js","./manifest.webmanifest","./icon-192.png","./icon-512.png"];
+const VER="66829b9b";
+const SHELL=["./","./index.html","./app.js?v="+VER,"./config.js?v="+VER,"./pdf.worker.min.js","./xlsx.mini.min.js","./manifest.webmanifest","./icon-192.png","./icon-512.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open("shell-"+VER).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()))});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k.startsWith("shell-")&&k!=="shell-"+VER).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 self.addEventListener("fetch",e=>{
@@ -9,7 +9,7 @@ self.addEventListener("fetch",e=>{
     e.respondWith((async()=>{
       try{const fd=await e.request.formData();const box=await caches.open("share-inbox");
         for(const k of await box.keys())await box.delete(k);
-        let i=0;for(const f of fd.getAll("files")){if(f&&f.size){await box.put("./inbox/"+(i++),new Response(f,{headers:{"x-kind":"file"}}))}}
+        let i=0;for(const f of fd.getAll("files")){if(f&&f.size){await box.put("./inbox/"+(i++),new Response(f,{headers:{"x-kind":"file","x-name":encodeURIComponent(f.name||"")}}))}}
         const t=[fd.get("title"),fd.get("text")].filter(Boolean).join(" ");
         if(t&&!i)await box.put("./inbox/text",new Response(t,{headers:{"x-kind":"text"}}));
       }catch(err){}

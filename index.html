@@ -287,9 +287,9 @@ body{-webkit-tap-highlight-color:transparent;overscroll-behavior-y:contain}
   <section id="v-importar" class="wrap" style="gap:14px" hidden>
     <div class="card">
       <h2>Importar fatura do banco</h2>
-      <p class="hint" style="margin:0">Escolha o PDF ou CSV/OFX da fatura, ou cole o texto. Parcelas no formato "03/10" são reconhecidas.</p>
+      <p class="hint" style="margin:0">Escolha o PDF, a planilha (.xlsx) ou o CSV/OFX da fatura, ou cole o texto. Parcelas no formato "03/10" são reconhecidas.</p>
       <div class="field"><label for="impFatura">Esta é a fatura de</label><select id="impFatura"></select></div>
-      <div class="field"><label for="impFile">Arquivo da fatura (.pdf, .csv, .ofx)</label><input type="file" id="impFile"><span class="hint" id="impStatus"></span></div>
+      <div class="field"><label for="impFile">Arquivo da fatura (.pdf, .xlsx, .csv, .ofx)</label><input type="file" id="impFile"><span class="hint" id="impStatus"></span></div>
       <div class="field" id="pwField" hidden><label for="impPw">Senha do PDF</label><input id="impPw" type="password" autocomplete="off" placeholder="Muitos bancos usam os primeiros dígitos do CPF"><button class="btn ghost" id="impPwGo" type="button">Abrir PDF</button></div>
       <div class="field"><label for="impText">Ou cole o texto da fatura</label><textarea id="impText" placeholder="12/09  SUPERMERCADO BISTEK      312,45&#10;13/09  POSTO IPIRANGA LAGES     250,00&#10;14/09  MAGAZINE LOJA  03/10      89,90"></textarea></div>
       <button class="btn" id="impRead">Ler lançamentos</button>
@@ -402,6 +402,6 @@ body{-webkit-tap-highlight-color:transparent;overscroll-behavior-y:contain}
 <div class="toast" id="toast" hidden></div>
 
 
-<script src="config.js?v=246c6089"></script>
-<script type="module" src="app.js?v=246c6089"></script>
+<script src="config.js?v=66829b9b"></script>
+<script type="module" src="app.js?v=66829b9b"></script>
 </body></html>

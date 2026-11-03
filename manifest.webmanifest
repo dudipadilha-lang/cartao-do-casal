@@ -46,6 +46,10 @@
       ".csv",
       ".ofx",
       "application/x-ofx",
+      ".xlsx",
+      ".xls",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/vnd.ms-excel",
       "application/octet-stream"
      ]
     }
